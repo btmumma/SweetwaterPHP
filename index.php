@@ -13,43 +13,34 @@ table, th, td {
 <body>
 
 <?php
-    // Base Call - Check To Ensure We Have Access to Sweetwater Test
-    $sql = "SELECT * FROM `sweetwater_test`;";
+    // Query to Group Comments By What They Contain. UNION handles the duplicates for me.
+    // Like I mentioned in queries.txt, SELECT * returns the same amount as my query, so I know I'm getting everything I want back
+    $sql = "SELECT * FROM `sweetwater_test`WHERE comments LIKE '%Candy%'
+    UNION
+    SELECT * FROM `sweetwater_test`WHERE comments LIKE '%Call Me%'
+    UNION
+    SELECT * FROM `sweetwater_test`WHERE comments LIKE '%Refer%'
+    UNION
+    SELECT * FROM `sweetwater_test`WHERE comments LIKE '%Signature%'
+    UNION
+    SELECT * FROM `sweetwater_test`;";
     $result = mysqli_query($conn, $sql);
     $resultCheck = mysqli_num_rows($result);
 
+    // Ensuring that we got data back from my query
     if($resultCheck > 0)
     {
-        // Grab all Candy Records
-        $sqlCandy = "SELECT * FROM `sweetwater_test`GROUP BY comments HAVING comments LIKE '%Candy%';";
-        $resultCandy = mysqli_query($conn, $sqlCandy);
-
         // Create table header
         echo "<table><tr><th>Order ID</th><th>Comments</th><th>Expected Ship Date</th></tr>";
         
-        // Iterate over all of the rows we got back from the database with Candy in the message...
-        while($candyRows = mysqli_fetch_assoc($resultCandy))
+        // Iterate over all of the rows we got back from the database...
+        while($row = mysqli_fetch_assoc($result))
         {
-            // Create the table data objects dynamically with the data we got back.
-            echo "<tr><td>".$candyRows["orderid"]."</td>  <td>".$candyRows["comments"]."</td> <td>".$candyRows["shipdate_expected"]."</td> </tr>";
-        }
+            // Create the table data rows dynamically with the data we got back.
+            echo "<tr><td>".$row["orderid"]."</td>  <td>".$row["comments"]."</td> <td>".$row["shipdate_expected"]."</td> </tr>";
 
-        //-----------------------------------------------------------------------------------------------------------------------------------------
-        
-        // Grab all Call Me / Don't Call Me Records
-        $sqlCallMe = "SELECT * FROM `sweetwater_test`GROUP BY comments HAVING comments LIKE '%Call Me%';";
-        $resultCallMe = mysqli_query($conn, $sqlCallMe);
-        
-        // Iterate over all of the rows we got back from the database with Candy in the message...
-        while($callMeRows = mysqli_fetch_assoc($resultCallMe))
-        {
-            // Create the table data objects dynamically with the data we got back.
-            echo "<tr><td>".$callMeRows["orderid"]."</td>  <td>".$callMeRows["comments"]."</td> <td>".$callMeRows["shipdate_expected"]."</td> </tr>";
+            $comment = $row["comments"];
         }
-        
-        //-----------------------------------------------------------------------------------------------------------------------------------------
-        
-        
     }
     else
     {
