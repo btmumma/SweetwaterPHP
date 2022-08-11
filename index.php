@@ -39,26 +39,30 @@ table, th, td {
             // Create the table data rows dynamically with the data we got back.
             echo "<tr><td>".$row["orderid"]."</td>  <td>".$row["comments"]."</td> <td>".$row["shipdate_expected"]."</td> </tr>";
             
-            // Code for INSERT into the DB
+            // Code for INSERT into the DB:
+            
+            // Create variables were going to need for the Query
             $orderID = $row["orderid"];
             $comment = $row["comments"];
 
             // Test to make sure my variables work. I will need 'orderID' for my INSERT
-            //echo $orderID . " " . $comment ."<br>";
+            // echo $orderID . " " . $comment ."<br>";
             if (str_contains($comment, 'Expected Ship Date')) 
             {
-                //This would work if Expected Ship Date was at the end of every message :(
-                //$dateToInsert = substr($comment, strpos($comment,'Expected Ship Date:') + 19);
+                // This would work if Expected Ship Date was at the end of every message :(
+                // $dateToInsert = substr($comment, strpos($comment,'Expected Ship Date:') + 19);
 
                 // At this point, the string is equal to Expected Ship Date: XX/XX/XXXX
+                // Edit: No, past Ben, it is not. We need to remove all non-numbers from the string
                 $dateToInsert = substr($comment ,strpos($comment,'Expected Ship Date:'));
 
-                //THIS DID NOT WORK BECAUSE GIFT AND OTHER JUNK WAS INCLUDED IN THE STR
-                //Use str_rplace to rid myself of Expected Shp Date
+                // THIS DID NOT WORK BECAUSE GIFT AND OTHER JUNK WAS INCLUDED IN THE STR
+                // Use str_rplace to rid myself of Expected Shp Date
                 // str_replace($search, $replace, $subject)
-                //$dateToInsert = str_replace("Expected Ship Date:", "",$dateToInsert);
-                //$dateToInsert = str_replace("Gift", "",$dateToInsert);
+                // $dateToInsert = str_replace("Expected Ship Date:", "",$dateToInsert);
+                // $dateToInsert = str_replace("Gift", "",$dateToInsert);
                 
+                // Use Regex to remove all non-numerical chars. 01/08/2022 Gift! = 01082022
                 $dateToInsert = preg_replace('~\D~', '', $dateToInsert);
 
                 // Using substr_replace to re-add the '/' char for the date
@@ -71,7 +75,7 @@ table, th, td {
 
                 // UPDATE query to update the MySQL Database
                 // I will leave this in, but it makes the page take a while to load.
-                // Verified myself that it is working as expecting
+                // Verified myself that it is working as expected
                 $insertQuery = "UPDATE `sweetwater_test` SET `shipdate_expected`= '$dateToInsert' WHERE orderid = $orderID;";
                 mysqli_query($conn, $insertQuery);
             }

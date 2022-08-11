@@ -17,5 +17,5 @@
 - Flexible (can put both of my legs behind my head at once)
 - Has a video game spreadsheet that lists every game I've played since 2019 on it with descriptions, playtime, etc.
 - Enjoys Pizza
-- Friends are forcing me to watch anime and it actually isn't as bad as they say it is.
+- Friends are forcing me to watch anime and it actually isn't as I was expecting
 
