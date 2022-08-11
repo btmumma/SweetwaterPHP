@@ -38,8 +38,39 @@ table, th, td {
         {
             // Create the table data rows dynamically with the data we got back.
             echo "<tr><td>".$row["orderid"]."</td>  <td>".$row["comments"]."</td> <td>".$row["shipdate_expected"]."</td> </tr>";
-
+            
+            // Code for INSERT into the DB
+            $orderID = $row["orderid"];
             $comment = $row["comments"];
+
+            // Test to make sure my variables work. I will need 'orderID' for my INSERT
+            //echo $orderID . " " . $comment ."<br>";
+            if (str_contains($comment, 'Expected Ship Date')) 
+            {
+                //This would work if Expected Ship Date was at the end of every message :(
+                //$dateToInsert = substr($comment, strpos($comment,'Expected Ship Date:') + 19);
+
+                // At this point, the string is equal to Expected Ship Date: XX/XX/XXXX
+                $dateToInsert = substr($comment ,strpos($comment,'Expected Ship Date:'));
+
+                //THIS DID NOT WORK BECAUSE GIFT AND OTHER JUNK WAS INCLUDED IN THE STR
+                //Use str_rplace to rid myself of Expected Shp Date
+                // str_replace($search, $replace, $subject)
+                //$dateToInsert = str_replace("Expected Ship Date:", "",$dateToInsert);
+                //$dateToInsert = str_replace("Gift", "",$dateToInsert);
+                
+                $dateToInsert = preg_replace('~\D~', '', $dateToInsert);
+
+                // Using substr_replace to re-add the '/' char for the date
+                $str_to_insert = "/";
+                $dateToInsert = substr_replace($dateToInsert, $str_to_insert, 2, 0);
+                $dateToInsert = substr_replace($dateToInsert, $str_to_insert, 5, 0);
+                
+                echo $dateToInsert;
+                echo "<br>";
+
+            }
+
         }
     }
     else

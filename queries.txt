@@ -1,0 +1,20 @@
+SELECT * FROM `sweetwater_test`
+GROUP BY comments 
+HAVING comments LIKE '%Candy%'
+
+
+SELECT * FROM `sweetwater_test`WHERE comments LIKE '%Candy%'
+UNION
+SELECT * FROM `sweetwater_test`WHERE comments LIKE '%Call Me%'
+UNION
+SELECT * FROM `sweetwater_test`WHERE comments LIKE '%Refer%'
+UNION
+SELECT * FROM `sweetwater_test`WHERE comments LIKE '%Signature%'
+UNION
+SELECT * FROM `sweetwater_test`;
+
+SELECT * FROM 'sweetwater_test' = 395 results
+That big ol' Union = 395 results
+
+
+UPDATE `sweetwater_test` SET `shipdate_expected`='2018-01-05' WHERE orderid = 30473857
