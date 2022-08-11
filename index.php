@@ -66,16 +66,21 @@ table, th, td {
                 $dateToInsert = substr_replace($dateToInsert, $str_to_insert, 2, 0);
                 $dateToInsert = substr_replace($dateToInsert, $str_to_insert, 5, 0);
                 
-                echo $dateToInsert;
-                echo "<br>";
+                // Convert the date so MySQL likes it (If we don't format it, the dates get put in as 2001)
+                $dateToInsert = date("Y-m-d", strtotime($dateToInsert));
 
+                // UPDATE query to update the MySQL Database
+                // I will leave this in, but it makes the page take a while to load.
+                // Verified myself that it is working as expecting
+                $insertQuery = "UPDATE `sweetwater_test` SET `shipdate_expected`= '$dateToInsert' WHERE orderid = $orderID;";
+                mysqli_query($conn, $insertQuery);
             }
 
         }
     }
     else
     {
-        echo "Ben is an idiot and can't connect";
+        echo "Ben is an idiot and can't code :(";
     }
 ?>
 
